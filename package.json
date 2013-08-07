@@ -1,0 +1,15 @@
+{
+  "name": "redis-callback",
+  "version": "0.0.1",
+  "description": "Callbacks through redis to make cross-server calls a breeze",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redis",
+    "callback"
+  ],
+  "author": "Graham Kennery <graham@kennery.com> (http://grahamkennery.com/)",
+  "license": "MIT"
+}
