@@ -111,7 +111,7 @@ RedisCallback.prototype._unsubscribe = function(event, functino) {
 
 
 RedisCallback.prototype.exec = function(event, cb) {
-	var params = [].slice.call(parameters);
+	var params = [].slice.call(arguments);
 	event = params.shift();
 	cb = params.pop();
 
