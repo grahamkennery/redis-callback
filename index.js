@@ -4,7 +4,7 @@ var redis = require('redis'),
 	util = require('util'), 
 	rando = require('silly-string');
 
-
+var debug = false;
 
 function RedisCallback(options) {
 	events.EventEmitter.call( this );
@@ -57,16 +57,16 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		var self = this;
 		
 		var subscription = function(str, done) {
-			console.log('sremming', event);
+			debug && console.log('sremming', event);
 			self.pubClient.srem(self.prefix + event, str, function() {
-				console.log('sremmed', event);
+				debug && console.log('sremmed', event);
 				// uuid and params
 				var obj = JSON.parse(str);
-				console.log('uuid found before processing', obj.uuid);
+				debug && console.log('uuid found before processing', obj.uuid);
 				var params = obj.params;
 				params.push(function() {
 					var params = [].slice.call(arguments);
-					console.log('THE CALLBACK HAPPENED, REJOICE!', event, params);
+					debug && console.log('THE CALLBACK HAPPENED, REJOICE!', event, params);
 					var str = JSON.stringify(params);
 
 					self.redisSub.publish(self.prefix + obj.uuid, str);
@@ -78,18 +78,18 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		};
 
 		var getFromSet = function() {
-			console.log('spopping');
+			debug && console.log('spopping');
 			self.pubClient.spop(self.prefix + event, function(err, str) {
-				console.log('spopped', err, str == null);
+				debug && console.log('spopped', err, str == null);
 				if (!err && str) {
 					subscription(str, function() {
 						getFromSet();
 					});
 				} else if (!err) {
-					console.log('Nothing in set - Subscribing', event);
+					debug && console.log('Nothing in set - Subscribing', event);
 					self.redisSub.on(self.prefix + event, subscription);	
 				} else {
-					console.log('Redis spop fail for', self.prefix + event);
+					debug && console.log('Redis spop fail for', self.prefix + event);
 				}
 				
 			});
@@ -101,7 +101,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		this.subscriptions[event][functino] = subscription;
 
 		getFromSet();
-		console.log('thisistheendoftheonfunctionfor', event);
+		debug && console.log('thisistheendoftheonfunctionfor', event);
 	}
 };
 
@@ -131,14 +131,14 @@ RedisCallback.prototype.exec = function(event, cb) {
 	var obj = { uuid: uuid, params: params };
 	var str = JSON.stringify(obj);
 	var self = this;
-	console.log('execccing', event, "params", params.length);
+	debug && console.log('execccing', event, "params", params.length);
 
 	this.pubClient.sadd(this.prefix + event, str, function(err) {
 		if (!err) {
-			console.log('sadded');
+			debug && console.log('sadded');
 
 			self.redisSub.once(self.prefix + uuid, function(str) {
-				console.log('OMG THE FINAL CALLBACK');
+				debug && console.log('OMG THE FINAL CALLBACK');
 				var params = JSON.parse(str);
 
 				if (Array.isArray(params)) {
@@ -147,7 +147,7 @@ RedisCallback.prototype.exec = function(event, cb) {
 					cb(params);
 				}
 			});
-			console.log('publishing to', event, uuid);
+			debug && console.log('publishing to', event, uuid);
 			self.redisSub.publish(self.prefix + event, str);
 		} else {
 			cb(err);
