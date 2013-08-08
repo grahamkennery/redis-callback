@@ -75,7 +75,9 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		};
 
 		var getFromSet = function() {
+			console.log('spopping');
 			self.pubClient.spop(self.prefix + event, function(err, str) {
+				console.log('spopped');
 				if (!err && str) {
 					subscription(str, function() {
 						getFromSet();
@@ -96,6 +98,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		this.subscriptions[event][functino] = subscription;
 
 		getFromSet();
+		console.log('thisistheendoftheonfunctionfor', event);
 	}
 };
 
