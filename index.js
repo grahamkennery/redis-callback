@@ -6,6 +6,11 @@ var redis = require('redis'),
 
 var debug = false;
 
+
+/**
+ * Constructor for RedisCallback class
+ * @param {object} options Options and stuff!
+ */
 function RedisCallback(options) {
 	events.EventEmitter.call( this );
 	options = options || {};
@@ -36,8 +41,10 @@ util.inherits(RedisCallback, events.EventEmitter);
 
 
 
-
-RedisCallback.prototype.setupListeners = function (cb) {
+/**
+ * Sets up the listeners to track subscriptions
+ */
+RedisCallback.prototype.setupListeners = function () {
 	var self = this;
   	this.on("removeListener", function(event) {
   		if (event != "removeListener" && event != "newListener") {
@@ -52,6 +59,12 @@ RedisCallback.prototype.setupListeners = function (cb) {
   	});
 };
 
+
+/**
+ * Subscribe action - called when a user calls .on on this object
+ * @param  {string} event    Event to listen for
+ * @param  {function} functino the function to call when an event is fired
+ */
 RedisCallback.prototype._subscribe = function(event, functino) {
 	if (this.listeners(event).length == 0) {
 		var self = this;
@@ -109,6 +122,12 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 	}
 };
 
+
+/**
+ * Removes a listener when a user calls removeListener
+ * @param  {string} event    Bound event
+ * @param  {function} functino the callback to remove
+ */
 RedisCallback.prototype._unsubscribe = function(event, functino) {
 	if (this.listeners(event).length == 0) {
 		
@@ -125,6 +144,11 @@ RedisCallback.prototype._unsubscribe = function(event, functino) {
 };
 
 
+/**
+ * The function to call when you want to publish out your call to redis
+ * @param  {string}   event The event that the other side is listening on
+ * @param  {function} cb    What to call when the other side responds
+ */
 RedisCallback.prototype.exec = function(event, cb) {
 	var params = [].slice.call(arguments);
 	event = params.shift();
@@ -160,5 +184,7 @@ RedisCallback.prototype.exec = function(event, cb) {
 };
 
 
-
+/**
+ * Module exports
+ */
 module.exports = RedisCallback;
