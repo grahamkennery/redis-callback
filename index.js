@@ -58,22 +58,26 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		
 		var subscription = function(str, done) {
 			debug && console.log('sremming', event);
-			self.pubClient.srem(self.prefix + event, str, function() {
-				debug && console.log('sremmed', event);
-				// uuid and params
-				var obj = JSON.parse(str);
-				debug && console.log('uuid found before processing', obj.uuid);
-				var params = obj.params;
-				params.push(function() {
-					var params = [].slice.call(arguments);
-					debug && console.log('THE CALLBACK HAPPENED, REJOICE!', event, params);
-					var str = JSON.stringify(params);
+			self.pubClient.srem(self.prefix + event, str, function(err, success) {
+				if (!err && success) {
+					debug && console.log('sremmed', event);
+					// uuid and params
+					var obj = JSON.parse(str);
+					debug && console.log('uuid found before processing', obj.uuid);
+					var params = obj.params;
+					params.push(function() {
+						var params = [].slice.call(arguments);
+						debug && console.log('THE CALLBACK HAPPENED, REJOICE!', event, params);
+						var str = JSON.stringify(params);
 
-					self.redisSub.publish(self.prefix + obj.uuid, str);
-					done && done();
-				});
+						self.redisSub.publish(self.prefix + obj.uuid, str);
+						done && done();
+					});
 
-				functino.apply(null, params);
+					functino.apply(null, params);
+				} else {
+					debug && console.log('Skipped processing - another server got it');
+				}
 			});
 		};
 
