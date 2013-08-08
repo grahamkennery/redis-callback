@@ -128,11 +128,14 @@ RedisCallback.prototype.exec = function(event, cb) {
 	var obj = { uuid: uuid, params: params };
 	var str = JSON.stringify(obj);
 	var self = this;
+	console.log('execccing', event, obj);
 
 	this.pubClient.sadd(this.prefix + event, str, function(err) {
 		if (!err) {
+			console.log('sadded');
 
 			self.redisSub.once(self.prefix + uuid, function(str) {
+				console.log('OMG THE FINAL CALLBACK');
 				var params = JSON.parse(str);
 
 				if (Array.isArray(params)) {
@@ -141,6 +144,7 @@ RedisCallback.prototype.exec = function(event, cb) {
 					cb(params);
 				}
 			});
+			console.log('publishing to', event, str);
 			self.redisSub.publish(self.prefix + event, str);
 		} else {
 			cb(err);
