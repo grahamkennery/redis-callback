@@ -27,6 +27,8 @@ function RedisCallback(options) {
 		throw new Error('I need a redis client, bro');
 	}
 
+	this.setupListeners();
+	
 	return this;
 };
 
