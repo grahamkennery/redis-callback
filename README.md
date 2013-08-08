@@ -52,7 +52,7 @@ var redisCallback = new RedisCallback({
 
 redisCallback.on('double', function(someNumber, cb) {
 	someNumber *= 2;
-	cb(nul, someNumber);
+	cb(null, someNumber);
 });
 
 ```
