@@ -16,5 +16,9 @@
     "redis-sub": "~0.1.6",
     "redis": "~0.8.4",
     "silly-string": "~1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grahamkennery/redis-callback"
   }
 }
