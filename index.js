@@ -77,7 +77,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		var getFromSet = function() {
 			console.log('spopping');
 			self.pubClient.spop(self.prefix + event, function(err, str) {
-				console.log('spopped');
+				console.log('spopped', err, str);
 				if (!err && str) {
 					subscription(str, function() {
 						getFromSet();
