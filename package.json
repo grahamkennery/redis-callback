@@ -11,5 +11,10 @@
     "callback"
   ],
   "author": "Graham Kennery <graham@kennery.com> (http://grahamkennery.com/)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "redis-sub": "~0.1.6",
+    "redis": "~0.8.4",
+    "silly-string": "~1.0.1"
+  }
 }
