@@ -28,7 +28,7 @@ function RedisCallback(options) {
 	}
 
 	this.setupListeners();
-	
+
 	return this;
 };
 
@@ -81,6 +81,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 						getFromSet();
 					});
 				} else if (!err) {
+					console.log('Nothing in set - Subscribing', event);
 					self.redisSub.on(this.prefix + event, subscription);	
 				} else {
 					console.log('Redis spop fail for', self.prefix + event);
@@ -93,6 +94,8 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 			this.subscriptions[event] = {};
 		}
 		this.subscriptions[event][functino] = subscription;
+
+		getFromSet();
 	}
 };
 
