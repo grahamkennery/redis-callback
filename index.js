@@ -72,7 +72,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 		var subscription = function(str, done, skipRemCheck) {
 			debug && console.log('sremming', event);
 			self.pubClient.srem(self.prefix + event, str, function(err, success) {
-				if (!err && (success || skipRemCheck) {
+				if (!err && (success || skipRemCheck)) {
 					debug && console.log('sremmed', event);
 					// uuid and params
 					var obj = JSON.parse(str);
