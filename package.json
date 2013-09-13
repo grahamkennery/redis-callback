@@ -1,6 +1,6 @@
 {
   "name": "redis-callback",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Callbacks through redis to make cross-server calls a breeze",
   "main": "index.js",
   "scripts": {
