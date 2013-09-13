@@ -69,10 +69,10 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 	if (this.listeners(event).length == 0) {
 		var self = this;
 		
-		var subscription = function(str, done) {
+		var subscription = function(str, done, skipRemCheck) {
 			debug && console.log('sremming', event);
 			self.pubClient.srem(self.prefix + event, str, function(err, success) {
-				if (!err && success) {
+				if (!err && (success || skipRemCheck) {
 					debug && console.log('sremmed', event);
 					// uuid and params
 					var obj = JSON.parse(str);
@@ -101,7 +101,7 @@ RedisCallback.prototype._subscribe = function(event, functino) {
 				if (!err && str) {
 					subscription(str, function() {
 						getFromSet();
-					});
+					}, true);
 				} else if (!err) {
 					debug && console.log('Nothing in set - Subscribing', event);
 					self.redisSub.on(self.prefix + event, subscription);	
