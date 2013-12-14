@@ -15,7 +15,8 @@
   "dependencies": {
     "redis-sub": "~0.1.6",
     "redis": "~0.8.4",
-    "silly-string": "~1.0.1"
+    "silly-string": "~1.0.1",
+    "debug": "~0.7.4"
   },
   "repository": {
     "type": "git",
